@@ -1,0 +1,14 @@
+{
+  "label": "SYNTHETIC/SIMULATED - follow-up, not a decision metric",
+  "rpu": {
+    "rpu_control": 37.00537453812563,
+    "rpu_treatment": 38.8070351758794,
+    "rel_diff": 0.04868645866285104,
+    "ci_low": -0.05204639741080075,
+    "ci_high": 0.1612725269263406
+  },
+  "orders_per_buyer": {
+    "control": 1.1221818181818182,
+    "treatment": 1.1087673038892552
+  }
+}
