@@ -8,6 +8,18 @@
 
 **Limitations:** some values in the dataset are redacted or obfuscated. The dataset contains no A/B experiment. Any experiment assignment or effect in this repo is simulated: such tables and files use the `synthetic_` prefix and are marked as simulated wherever they appear. They are never real results.
 
+## Synthetic data
+
+**Every `synthetic_` table is SIMULATED.** The experiment in `docs/experiment_plan.md` has never been run. Its assignment and treatment effect are generated on top of real events:
+
+| Model | Contents |
+|-------|----------|
+| `synthetic_exp__assignment` | Simulated 50/50 assignment of the enrolled users (hash of `user_pseudo_id`) |
+| `synthetic_exp__s1` | Scenario S1: real outcomes plus a simulated +4.0 pp effect in treatment |
+| `synthetic_exp__s2` | Scenario S2: S1 with about 3% of treatment users dropped (simulated broken assignment) |
+
+Results from these tables demonstrate the analysis method only. They are not evidence about checkout changes, and every chart based on them must be marked as simulated.
+
 ## Stack
 
 BigQuery (Sandbox) · dbt-bigquery · Python · Looker Studio

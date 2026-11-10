@@ -1,0 +1,77 @@
+version: 2
+
+# All models in this file contain SYNTHETIC/SIMULATED data. The dataset has no real experiment.
+
+models:
+  - name: synthetic_exp__assignment
+    description: >
+      SYNTHETIC/SIMULATED. 50/50 assignment of the users in int_exp__enrolled_users,
+      using a deterministic hash of user_pseudo_id with the salt 'checkout-v1:'
+      (docs/experiment_plan.md §3).
+    columns:
+      - name: user_pseudo_id
+        data_tests:
+          - unique
+          - not_null
+      - name: variant
+        description: control or treatment (simulated).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['control', 'treatment']
+
+  - name: synthetic_exp__s1
+    description: >
+      SYNTHETIC/SIMULATED. Scenario S1 (docs/experiment_plan.md §6): one row per
+      enrolled user, with a simulated +4.0 pp effect on exp_checkout_conversion_7d
+      in treatment. Real outcomes in control. Real outcomes plus simulated purchases
+      (is_synthetic_purchase) in treatment.
+    data_tests:
+      - row_count_equals:
+          arguments:
+            expected: 5962
+      - expression_is_true:
+          arguments:
+            expression: "not is_synthetic_purchase or variant = 'treatment'"
+    columns:
+      - name: user_pseudo_id
+        data_tests:
+          - unique
+          - not_null
+      - name: variant
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['control', 'treatment']
+      - name: pre_sessions_14d
+        description: CUPED covariate (real), from int_exp__enrolled_users.
+      - name: purchased_7d
+        description: Real purchase within 7 days, or a simulated purchase in treatment.
+      - name: revenue_7d
+        description: Real valid-order revenue, or the revenue of one real valid order for a simulated purchase.
+      - name: n_orders_7d
+        description: Real valid orders, or 1 for a simulated purchase.
+      - name: is_synthetic_purchase
+        description: TRUE when purchased_7d, revenue_7d and n_orders_7d come from the simulation.
+
+  - name: synthetic_exp__s2
+    description: >
+      SYNTHETIC/SIMULATED. Scenario S2 (docs/experiment_plan.md §6): S1 with about 3%
+      of treatment users dropped (salt 's2-drop:') to simulate broken assignment.
+    data_tests:
+      - expression_is_true:
+          arguments:
+            expression: "not is_synthetic_purchase or variant = 'treatment'"
+    columns:
+      - name: user_pseudo_id
+        data_tests:
+          - unique
+          - not_null
+      - name: variant
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['control', 'treatment']
