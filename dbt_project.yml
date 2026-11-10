@@ -1,0 +1,26 @@
+name: ga4_funnel_experiment
+version: "1.0.0"
+config-version: 2
+require-dbt-version: [">=1.12.0", "<2.0.0"]
+
+# Profile is defined in ~/.dbt/profiles.yml (outside the repo, OAuth via gcloud ADC).
+profile: ga4_funnel_experiment
+
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  ga4_funnel_experiment:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table

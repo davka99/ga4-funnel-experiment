@@ -1,0 +1,15 @@
+# Local working notes and tool settings
+CLAUDE.local.md
+.claude/
+
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+
+# dbt artifacts
+target/
+dbt_packages/
+logs/
