@@ -187,7 +187,7 @@ def main() -> None:
         result = analyse(load_scenario(TABLES[args.scenario]))
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    out = OUTPUT_DIR / f"results_{args.scenario}.json"
+    out = OUTPUT_DIR / f"synthetic_results_{args.scenario}.json"
     out.write_text(json.dumps(result, indent=2))
     print(json.dumps(result, indent=2))
     print(f"\nSaved to {out}")
