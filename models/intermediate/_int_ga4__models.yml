@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: int_ga4__session_funnel
+    description: >
+      One row per session (session_key) with the first timestamp of each funnel
+      step and ordered reached_<step> flags. Funnel: view_item → add_to_cart →
+      begin_checkout → add_payment_info → purchase. A step is reached only if all
+      earlier steps were reached and each step's first timestamp is >= the
+      previous step's first timestamp. Sessions with a NULL session_key are
+      excluded.
+    data_tests:
+      - funnel_steps_non_increasing:
+          arguments:
+            steps:
+              - reached_view_item
+              - reached_add_to_cart
+              - reached_begin_checkout
+              - reached_add_payment_info
+              - reached_purchase
+    columns:
+      - name: session_key
+        description: user_pseudo_id || '-' || ga_session_id.
+        data_tests:
+          - unique
+          - not_null
+      - name: user_pseudo_id
+        description: Pseudonymous device/browser identifier of the session.
+        data_tests:
+          - not_null
+      - name: session_start_date
+        description: Earliest event_date in the session (export date, not UTC).
+        data_tests:
+          - not_null
+      - name: first_view_item_ts
+        description: First view_item timestamp in the session (any order).
+      - name: first_add_to_cart_ts
+        description: First add_to_cart timestamp in the session (any order).
+      - name: first_begin_checkout_ts
+        description: First begin_checkout timestamp in the session (any order).
+      - name: first_add_payment_info_ts
+        description: First add_payment_info timestamp in the session (any order).
+      - name: first_purchase_ts
+        description: First purchase timestamp in the session (any order).
+      - name: reached_view_item
+        description: Session has at least one view_item event.
+      - name: reached_add_to_cart
+        description: reached_view_item and first_add_to_cart_ts >= first_view_item_ts.
+      - name: reached_begin_checkout
+        description: reached_add_to_cart and first_begin_checkout_ts >= first_add_to_cart_ts.
+      - name: reached_add_payment_info
+        description: reached_begin_checkout and first_add_payment_info_ts >= first_begin_checkout_ts.
+      - name: reached_purchase
+        description: reached_add_payment_info and first_purchase_ts >= first_add_payment_info_ts.
