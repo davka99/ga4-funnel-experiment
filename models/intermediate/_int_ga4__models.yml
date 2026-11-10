@@ -52,3 +52,35 @@ models:
         description: reached_begin_checkout and first_add_payment_info_ts >= first_begin_checkout_ts.
       - name: reached_purchase
         description: reached_add_payment_info and first_purchase_ts >= first_add_payment_info_ts.
+
+  - name: int_ga4__user_checkout
+    description: >
+      One row per user_pseudo_id with at least one begin_checkout event in
+      2020-11-01 to 2021-01-31, anchored on the user's first begin_checkout.
+      Population for the primary KPI checkout_conversion_7d (see docs/metrics.md).
+      All timestamps are UTC.
+    columns:
+      - name: user_pseudo_id
+        description: Pseudonymous device/browser identifier.
+        data_tests:
+          - unique
+          - not_null
+      - name: first_begin_checkout_ts
+        description: Timestamp of the user's first begin_checkout event.
+        data_tests:
+          - not_null
+      - name: has_full_window
+        description: >
+          first_begin_checkout_ts < 2021-01-25 (UTC), i.e. the full 7-day
+          follow-up window is inside the data range.
+      - name: purchased_within_7d
+        description: >
+          The user has a purchase event with event_ts >= first_begin_checkout_ts
+          and < first_begin_checkout_ts + 7 days. Sessions do not matter.
+      - name: device_category
+        description: device_category on the first begin_checkout event.
+      - name: n_sessions_before_checkout
+        description: >
+          Number of observed sessions (from 2020-11-01) that started before the
+          session containing the first begin_checkout. History before the data
+          range is not visible.
