@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_ga4__events
+    description: >
+      One row per GA4 event from the obfuscated Google Merchandise Store export,
+      2020-11-01 to 2021-01-31. Selected event params are unnested into columns.
+      No deduplication or filtering beyond the date range is applied.
+    columns:
+      - name: event_date
+        description: Event date, parsed from the export's YYYYMMDD string.
+        data_tests:
+          - not_null
+      - name: event_ts
+        description: Event timestamp (UTC), from event_timestamp in microseconds.
+        data_tests:
+          - not_null
+      - name: event_name
+        description: GA4 event name, e.g. session_start, view_item, purchase.
+        data_tests:
+          - not_null
+      - name: user_pseudo_id
+        description: Pseudonymous device/browser identifier. Not a person-level ID.
+        data_tests:
+          - not_null
+      - name: ga_session_id
+        description: Session identifier from event param ga_session_id (int_value). Unique only per user.
+      - name: ga_session_number
+        description: The user's session sequence number from event param ga_session_number (int_value).
+      - name: session_key
+        description: >
+          Session key = user_pseudo_id || '-' || ga_session_id. NULL when
+          ga_session_id is missing.
+        data_tests:
+          - null_share_below:
+              arguments:
+                max_share: 0.01
+              config:
+                severity: warn
+      - name: page_location
+        description: Page URL from event param page_location (string_value). May be obfuscated.
+      - name: device_category
+        description: Device category (desktop, mobile, tablet).
+      - name: country
+        description: Country from geo.country.
+      - name: traffic_medium
+        description: >
+          Medium of the user's first acquisition (traffic_source.medium).
+          User-level first touch, not the session's source.
+      - name: traffic_source
+        description: >
+          Source of the user's first acquisition (traffic_source.source).
+          User-level first touch, not the session's source.
+      - name: transaction_id
+        description: Transaction ID from ecommerce.transaction_id. Populated on purchase events.
+      - name: purchase_revenue_usd
+        description: Purchase revenue in USD from ecommerce.purchase_revenue_in_usd.
