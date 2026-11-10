@@ -4,7 +4,7 @@
 
 **Decision (pre-registered rule, plan v1.2 §8): NO LAUNCH YET.** The primary metric improved clearly, but the revenue guardrail cannot rule out harm.
 
-**Recommendation to stakeholders:** launch to 90% of users and keep a 10% holdout. Track revenue per user against a pre-registered margin. This is a business judgment on top of the rule, not the rule's outcome. See §5.
+**Recommendation to stakeholders:** launch to 90% of users and keep a 10% holdout. Track revenue per user against an RPU margin to be pre-registered before the 90% rollout. This is a business judgment on top of the rule, not the rule's outcome. See §5.
 
 ---
 
@@ -24,7 +24,8 @@ Fewer than half of users who start checkout complete a purchase within 7 days. W
 | Check | Result | Verdict |
 |---|---|---|
 | Sample ratio (SRM) | 2,977 vs 2,985, p = 0.92 | ✅ Pass |
-| **Conversion (CUPED, decision estimate)** | 46.2% → 50.8%: **+4.54 pp** (95% CI +2.06 to +7.03), p = 0.0003 | ✅ Positive |
+| Conversion levels (raw) | 46.2% → 50.8% | |
+| **Conversion (CUPED, decision estimate)** | **+4.54 pp** (95% CI +2.06 to +7.03), p = 0.0003 | ✅ Positive |
 | Conversion (raw) | +4.63 pp (95% CI +2.10 to +7.16), relative lift +10.0% | ✅ Consistent |
 | **AOV guardrail** | $71.40 → $68.87: **−3.5%** (95% CI −11.1% to +4.7%) | ⚠️ Inconclusive |
 | Revenue per enrolled user (follow-up, §8) | $37.01 → $38.81: +4.9% (95% CI −5.2% to +16.1%) | ⚠️ Inconclusive |
@@ -33,14 +34,14 @@ The CUPED covariate was sessions in the 14 days before the trigger. It reduced v
 
 ## 4. What we learned
 1. **The method recovers the effect.** The simulated true effect was +4.0 pp, about +4.4 pp as realised in this sample. The CI contains both values. An A/A check on real outcomes (1,000 random splits) gave a 4.9% false-positive rate against the expected 5%.
-2. **The guardrail was underpowered, and this is a design flaw in the plan.** With about 1,600 orders per arm, the AOV CI is roughly ±8%. It cannot show non-inferiority against −5% even when the true AOV effect is zero, which it is by construction in this simulation. Showing non-inferiority with 80% power would need about 5× the sample, roughly 30 weeks at current traffic.
-3. **The SRM check has low power at this scale.** In scenario S2, 3.35% of treatment users were removed and the check still passed (p = 0.23). We predicted and logged this before running: at ~2,980 per arm and p < 0.001, only losses of about 9% or more are detected. The random loss in S2 caused no visible bias. In production, losses are rarely random, so a small SRM can hide real bias.
+2. **The guardrail was underpowered, and this is a design flaw in the plan.** With about 1,600 orders per arm, the AOV CI is roughly ±8%. It cannot show non-inferiority against −5% even when the true AOV effect is zero, which it is by construction in this simulation. Showing non-inferiority with 80% power would need about 5× the sample: roughly 30 weeks at test-period traffic (~994 users/week), about 40 weeks at the 12-week average (760/week).
+3. **The SRM check has low power at this scale.** In scenario S2, 3.35% of treatment users were removed and the check still passed (p = 0.23). We predicted and logged this before running: at ~2,980 per arm and p < 0.001, only losses of about 8–9% or more are detected. The random loss in S2 caused no visible bias. In production, losses are rarely random, so a small SRM can hide real bias.
 
 ## 5. Options
 | Option | For | Against |
 |---|---|---|
-| **A. Launch to 90%, keep a 10% holdout (recommended)** | Captures the conversion gain now. The holdout measures long-run revenue impact with a pre-registered RPU margin. | The 10% holdout misses the improvement during the measurement period |
-| B. Do not launch, run a longer test | Answers the AOV question directly | About 30 weeks; the conversion gain is lost in the meantime |
+| **A. Launch to 90%, keep a 10% holdout (recommended)** | Captures the conversion gain now. The holdout measures long-run revenue impact against an RPU margin to be pre-registered before the 90% rollout. | The 10% holdout misses the improvement during the measurement period |
+| B. Do not launch, run a longer test | Answers the AOV question directly | Roughly 30 weeks at test-period traffic (~994 users/week), about 40 weeks at the 12-week average (760/week); the conversion gain is lost in the meantime |
 | C. Launch to 100% | Simplest | Gives up the ability to detect revenue harm |
 
 ## 6. Next experiment: design fixes
