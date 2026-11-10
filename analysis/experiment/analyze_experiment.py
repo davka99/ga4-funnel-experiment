@@ -12,13 +12,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from scipy.stats import chisquare, norm
 
-PROJECT = "a4-funnel-experiment"
+PROJECT = os.environ.get("GCP_PROJECT", "a4-funnel-experiment")
 DATASET = "funnel_dev"
 ALPHA = 0.05
 SRM_THRESHOLD = 0.001
