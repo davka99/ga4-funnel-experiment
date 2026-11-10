@@ -4,6 +4,10 @@ A funnel analysis and pre-registered checkout experiment built on real GA4 e-com
 
 > **SYNTHETIC/SIMULATED — experiment part.** The user behaviour comes from real (obfuscated) GA4 events. The dataset contains **no A/B test**. The experiment's assignment and treatment effect are simulated. They live only in `synthetic_` tables (`synthetic_exp__assignment`, `synthetic_exp__s1`, `synthetic_exp__s2`, `synthetic_rpt_experiment_variants`, and the seed `synthetic_experiment_results`) and `synthetic_` files (`analysis/experiment/output/synthetic_*.json`, `seeds/synthetic_experiment_results.csv`). The experiment results demonstrate the method. They are not evidence that a simplified checkout works.
 
+**Dashboard:** [Looker Studio](https://datastudio.google.com/reporting/61956f78-2141-4efc-ae68-0c0de37d5367)
+
+![Dashboard](docs/img/dashboard.png)
+
 ## Business question
 
 Where do buyers drop out of the purchase funnel, and how would we test a simplified checkout so that the launch decision is credible?
@@ -19,7 +23,7 @@ Where do buyers drop out of the purchase funnel, and how would we test a simplif
 ## Approach
 
 ```
-raw GA4 export → staging → intermediate → marts → analysis
+raw GA4 export → staging → intermediate → marts → Looker Studio / analysis
 ```
 
 | Layer | What it does |
@@ -28,6 +32,7 @@ raw GA4 export → staging → intermediate → marts → analysis
 | Staging | `stg_ga4__events`: one row per event, with event params unnested, a session key and typed dates, clustered by event name and date. |
 | Intermediate | Session funnel with ordered step flags (`int_ga4__session_funnel`), the user-level checkout baseline (`int_ga4__user_checkout`) and the experiment population (`int_exp__enrolled_users`). |
 | Marts | Reporting tables on real data (`rpt_funnel_steps`, `rpt_checkout_baseline_weekly`), plus SIMULATED assignment, scenarios and per-variant reporting on top of the real population (`synthetic_exp__assignment`, `synthetic_exp__s1`, `synthetic_exp__s2`, `synthetic_rpt_experiment_variants`). Experiment results are loaded as the seed `synthetic_experiment_results`. |
+| Looker Studio | The dashboard reads the `rpt_` tables (funnel steps, weekly baseline) and the `synthetic_` tables (per-variant conversion and experiment results) directly from BigQuery. |
 | Analysis | Exploration queries (`analysis/exploration/`), power and MDE (`analysis/power/`), and the pre-registered experiment analysis (`analysis/experiment/`). |
 
 Every KPI is defined in `docs/metrics.md` and every modelling choice is logged in `docs/decisions.md`. The experiment plan (`docs/experiment_plan.md`) was committed before any simulated treatment data existed (v1.0 `dd65d43`, amended to v1.2 `3126238`).
