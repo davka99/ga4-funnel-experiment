@@ -54,3 +54,17 @@ Source query: `analysis/exploration/04_session_funnel_steps.sql`. Results on 202
 | purchase | 2,751 | 73.89% | 0.76% |
 
 **Caveat:** this is a within-session funnel. Steps completed in an earlier session are not counted, which mainly lowers `begin_checkout` and later steps (see `docs/decisions.md`).
+
+## exp_checkout_conversion_7d (experiment primary metric)
+
+Defined in `docs/experiment_plan.md` (§3–4). It is not the same as the descriptive `checkout_conversion_7d` above (see `docs/decisions.md`).
+
+| Field        | Definition |
+|--------------|------------|
+| Population   | Users (`user_pseudo_id`) with at least one `begin_checkout` from 2020-11-16 to 2020-12-27 (UTC, ISO weeks W47–W52) |
+| Grain        | User (one row per `user_pseudo_id` in `int_exp__enrolled_users`) |
+| Numerator    | Users with `purchased_7d = true`: at least one `purchase` event in [`trigger_ts`, `trigger_ts` + 7 days) |
+| Denominator  | All enrolled users |
+| Time window  | Trigger: the first `begin_checkout` in the window above. Outcome: 7 days from the trigger (the last window ends 2021-01-03). |
+
+**Pre-experiment value on real events** (`07_exp_population_checks.sql`, 2026-11-10): 46.31% (2,761 / 5,962). There is no assignment and no treatment yet.

@@ -84,3 +84,43 @@ models:
           Number of observed sessions (from 2020-11-01) that started before the
           session containing the first begin_checkout. History before the data
           range is not visible.
+
+  - name: int_exp__enrolled_users
+    description: >
+      Experiment population per docs/experiment_plan.md (§3-4, §7.3): one row per
+      user_pseudo_id enrolled at their first begin_checkout from 2020-11-16 to
+      2020-12-27 (UTC). Real events only, with no assignment and no synthetic data.
+    columns:
+      - name: user_pseudo_id
+        description: Pseudonymous device/browser identifier (randomisation unit).
+        data_tests:
+          - unique
+          - not_null
+      - name: trigger_ts
+        description: First begin_checkout inside the experiment window (UTC).
+        data_tests:
+          - not_null
+      - name: device_category
+        description: device_category on the trigger event.
+      - name: pre_sessions_14d
+        description: >
+          CUPED covariate. Distinct session_key with at least one event in
+          [trigger_ts - 14 days, trigger_ts). This includes the trigger session
+          if it has events before the trigger. 0 when there are no such events.
+        data_tests:
+          - accepted_range:
+              arguments:
+                min_value: 0
+      - name: purchased_7d
+        description: >
+          At least one purchase event in [trigger_ts, trigger_ts + 7 days),
+          with or without a valid transaction_id. Outcome for exp_checkout_conversion_7d.
+        data_tests:
+          - not_null
+      - name: revenue_7d
+        description: >
+          Revenue (USD) of valid orders in the outcome window: one row per distinct
+          transaction_id, excluding NULL and '(not set)', taking the highest
+          revenue per duplicated transaction_id. 0 when there are no valid orders.
+      - name: n_orders_7d
+        description: Distinct valid transaction_id in the outcome window (excluding NULL and '(not set)').
