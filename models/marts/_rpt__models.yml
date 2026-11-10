@@ -1,0 +1,84 @@
+version: 2
+
+# Reporting tables on real data (no simulated assignment or effect).
+
+models:
+  - name: rpt_funnel_steps
+    description: >
+      One row per session funnel step (0 = all sessions, 1-5 = view_item to purchase)
+      from int_ga4__session_funnel. Same figures as analysis/exploration/04_session_funnel_steps.sql.
+    data_tests:
+      - row_count_equals:
+          arguments:
+            expected: 6
+      - expression_is_true:
+          arguments:
+            expression: "step_order = 0 or conv_from_previous is not null"
+    columns:
+      - name: step_order
+        data_tests:
+          - unique
+          - not_null
+      - name: step_name
+        data_tests:
+          - unique
+          - not_null
+      - name: sessions_ordered
+        description: Sessions with reached_<step> = true (steps in order within the session).
+        data_tests:
+          - not_null
+      - name: sessions_any_order
+        description: Sessions with the step's event at all, ignoring order.
+        data_tests:
+          - not_null
+      - name: conv_from_previous
+        description: sessions_ordered / sessions_ordered of the previous step (NULL for step 0).
+      - name: conv_from_all
+        description: sessions_ordered / all sessions.
+        data_tests:
+          - not_null
+
+  - name: rpt_checkout_baseline_weekly
+    description: >
+      checkout_conversion_7d by ISO week (UTC) of the first begin_checkout, users with
+      has_full_window only, with 95% Wilson intervals. Same figures as
+      analysis/exploration/05_checkout_baseline.sql.
+    data_tests:
+      - row_count_equals:
+          arguments:
+            expected: 13
+      - expression_is_true:
+          arguments:
+            expression: "ci_low <= conversion and conversion <= ci_high"
+      - expression_is_true:
+          arguments:
+            expression: "is_partial_week = (iso_week = '2020-W44')"
+    columns:
+      - name: iso_week
+        data_tests:
+          - unique
+          - not_null
+      - name: week_start_date
+        description: Monday of the ISO week.
+        data_tests:
+          - unique
+          - not_null
+      - name: users
+        data_tests:
+          - not_null
+      - name: buyers
+        data_tests:
+          - not_null
+      - name: conversion
+        data_tests:
+          - not_null
+      - name: ci_low
+        data_tests:
+          - not_null
+      - name: ci_high
+        data_tests:
+          - not_null
+      - name: is_partial_week
+        description: TRUE when the ISO week is not fully inside 2020-11-01 .. 2021-01-24.
+        data_tests:
+          - not_null
