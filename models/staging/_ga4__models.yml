@@ -6,6 +6,10 @@ models:
       One row per GA4 event from the obfuscated Google Merchandise Store export,
       2020-11-01 to 2021-01-31. Selected event params are unnested into columns.
       No deduplication or filtering beyond the date range is applied.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [user_pseudo_id, event_ts, event_name]
     columns:
       - name: event_date
         description: Event date, parsed from the export's YYYYMMDD string.
