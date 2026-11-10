@@ -2,12 +2,12 @@
 
 | | |
 |---|---|
-| Status | Pre-registered. v1.0 was committed in `e63eea0`. v1.1 corrects errors found in review before any treatment data was generated or analysed (see §11). The commit hash of each version serves as its registration timestamp. |
-| Version | 1.1 (2026-11-10) |
+| Status | Pre-registered. v1.0 was committed in `e63eea0`. v1.1 and v1.2 correct errors found in review before any treatment data was generated or analysed (see §11). The commit hash of each version serves as its registration timestamp. |
+| Version | 1.2 (2026-11-10) |
 | Data | Real GA4 events from the Google Merchandise Store (obfuscated sample). **Treatment assignment and treatment effect are SYNTHETIC/SIMULATED.** The dataset contains no real experiment. |
 
 ## 1. Background
-Fewer than half of users who begin checkout purchase within 7 days (`checkout_conversion_7d` = 43.83%, 95% CI 42.82–44.84%, n = 9,232, Nov 2020–Jan 2021). The largest loss inside checkout is between `begin_checkout` and `add_payment_info`: only 59% of users who start checkout reach the payment step. (`add_shipping_info` fires for almost exactly the same users as `begin_checkout`, so the data shows no separate shipping drop-off.) The proposed (hypothetical) change replaces the multi-field shipping and payment form with a single, shorter form, using address autofill and fewer required fields.
+Fewer than half of users who begin checkout purchase within 7 days (`checkout_conversion_7d` = 43.83%, 95% CI 42.82–44.84%, n = 9,232, Nov 2020–Jan 2021). The largest loss inside checkout is between `begin_checkout` and `add_payment_info`: only 59% of users who start checkout reach the payment step (users over the whole period, any order of events; descriptive only). (`add_shipping_info` fires for almost exactly the same users as `begin_checkout`, so the data shows no separate shipping drop-off.) The proposed (hypothetical) change replaces the multi-field shipping and payment form with a single, shorter form, using address autofill and fewer required fields.
 
 ## 2. Hypothesis
 - **H0:** The simplified checkout does not change `exp_checkout_conversion_7d`.
@@ -37,7 +37,7 @@ Fewer than half of users who begin checkout purchase within 7 days (`checkout_co
 - **Sample ratio mismatch (SRM):** the split between groups must be consistent with 50/50.
 
 ## 5. Sample size and power
-Calculated in `analysis/power/power_mde.py`: two-sided test of two proportions, α = 0.05, power = 0.80, p0 = 0.4383.
+Calculated in `analysis/power/power_mde.py` (section D reproduces the figures below): two-sided test of two proportions, α = 0.05, power = 0.80, p0 = 0.4631.
 
 | Item | Value |
 |---|---|
@@ -93,4 +93,5 @@ All of the following is SIMULATED and is labelled as such in every table and cha
 | Version | Commit | Change |
 |---|---|---|
 | 1.0 | `e63eea0` | First registration |
-| 1.1 | this commit | Corrections found in review, before any treatment data existed: (1) the primary metric is renamed `exp_checkout_conversion_7d`, and p0 is set for the plan's own population (46.31% instead of 43.83%); (2) enrolled n is 5,962 instead of ~5,850, so the MDE is 3.63 pp and S1 power is 0.87; (3) the background no longer claims a separate shipping step; (4) the CUPED covariate is defined exactly as a new 14-day column; (5) the CI method for the CUPED estimate is specified. |
+| 1.1 | `9145474` | Corrections found in review, before any treatment data existed: (1) the primary metric is renamed `exp_checkout_conversion_7d`, and p0 is set for the plan's own population (46.31% instead of 43.83%); (2) enrolled n is 5,962 instead of ~5,850, so the MDE is 3.63 pp and S1 power is 0.87; (3) the background no longer claims a separate shipping step; (4) the CUPED covariate is defined exactly as a new 14-day column; (5) the CI method for the CUPED estimate is specified. |
+| 1.2 | this commit | Consistency fixes: §5 now states p0 = 0.4631, the same value as its table; `power_mde.py` gains a section D that prints the v1.1+ figures; the 59% figure in §1 is labelled as descriptive (whole period, any order). No change to design, metrics or decision rules. |
