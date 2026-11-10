@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Pre-registered. v1.0 was committed in `e63eea0`. v1.1 and v1.2 correct errors found in review before any treatment data was generated or analysed (see §11). The commit hash of each version serves as its registration timestamp. |
+| Status | Pre-registered. v1.0 was committed in `dd65d43`. v1.1 and v1.2 correct errors found in review before any treatment data was generated or analysed (see §11). The commit hash of each version serves as its registration timestamp. |
 | Version | 1.2 (2026-11-10) |
 | Data | Real GA4 events from the Google Merchandise Store (obfuscated sample). **Treatment assignment and treatment effect are SYNTHETIC/SIMULATED.** The dataset contains no real experiment. |
 
@@ -92,6 +92,7 @@ All of the following is SIMULATED and is labelled as such in every table and cha
 ## 11. Change log
 | Version | Commit | Change |
 |---|---|---|
-| 1.0 | `e63eea0` | First registration |
-| 1.1 | `9145474` | Corrections found in review, before any treatment data existed: (1) the primary metric is renamed `exp_checkout_conversion_7d`, and p0 is set for the plan's own population (46.31% instead of 43.83%); (2) enrolled n is 5,962 instead of ~5,850, so the MDE is 3.63 pp and S1 power is 0.87; (3) the background no longer claims a separate shipping step; (4) the CUPED covariate is defined exactly as a new 14-day column; (5) the CI method for the CUPED estimate is specified. |
-| 1.2 | this commit | Consistency fixes: §5 now states p0 = 0.4631, the same value as its table; `power_mde.py` gains a section D that prints the v1.1+ figures; the 59% figure in §1 is labelled as descriptive (whole period, any order). No change to design, metrics or decision rules. |
+| 1.0 | `dd65d43` | First registration |
+| 1.1 | `31882a4` | Corrections found in review, before any treatment data existed: (1) the primary metric is renamed `exp_checkout_conversion_7d`, and p0 is set for the plan's own population (46.31% instead of 43.83%); (2) enrolled n is 5,962 instead of ~5,850, so the MDE is 3.63 pp and S1 power is 0.87; (3) the background no longer claims a separate shipping step; (4) the CUPED covariate is defined exactly as a new 14-day column; (5) the CI method for the CUPED estimate is specified. |
+| 1.2 | `3126238` | Consistency fixes: §5 now states p0 = 0.4631, the same value as its table; `power_mde.py` gains a section D that prints the v1.1+ figures; the 59% figure in §1 is labelled as descriptive (whole period, any order). No change to design, metrics or decision rules. |
+| – | this commit | Commit hashes updated after the history was rewritten to replace the personal author email with a GitHub noreply address: v1.0 `e63eea0` → `dd65d43`, v1.1 `9145474` → `31882a4`, v1.2 `66f5b25` → `3126238`. Commit dates, order and file contents are unchanged. No change to design, metrics or decision rules. |

@@ -30,7 +30,7 @@ raw GA4 export → staging → intermediate → marts → analysis
 | Marts | SIMULATED assignment and scenarios on top of the real population (`synthetic_exp__assignment`, `synthetic_exp__s1`, `synthetic_exp__s2`). |
 | Analysis | Exploration queries (`analysis/exploration/`), power and MDE (`analysis/power/`), and the pre-registered experiment analysis (`analysis/experiment/`). |
 
-Every KPI is defined in `docs/metrics.md` and every modelling choice is logged in `docs/decisions.md`. The experiment plan (`docs/experiment_plan.md`) was committed before any simulated treatment data existed (v1.0 `e63eea0`, amended to v1.2 `66f5b25`).
+Every KPI is defined in `docs/metrics.md` and every modelling choice is logged in `docs/decisions.md`. The experiment plan (`docs/experiment_plan.md`) was committed before any simulated treatment data existed (v1.0 `dd65d43`, amended to v1.2 `3126238`).
 
 ## Results (SYNTHETIC/SIMULATED, scenario S1)
 

@@ -18,7 +18,7 @@ Fewer than half of users who start checkout complete a purchase within 7 days. W
 | Users | 5,962 (2,977 control / 2,985 treatment) |
 | Primary metric | `exp_checkout_conversion_7d`: share of enrolled users who purchase within 7 days of the trigger |
 | Guardrail | Average order value (AOV), with a non-inferiority margin of −5% |
-| Pre-registration | Plan v1.0 `e63eea0`, amended to v1.2 `66f5b25` before any treatment data existed |
+| Pre-registration | Plan v1.0 `dd65d43`, amended to v1.2 `3126238` before any treatment data existed |
 
 ## 3. Results
 | Check | Result | Verdict |
