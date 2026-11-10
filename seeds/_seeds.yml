@@ -1,0 +1,44 @@
+version: 2
+
+seeds:
+  - name: synthetic_experiment_results
+    description: >
+      SYNTHETIC/SIMULATED. Experiment results for scenarios S0, S1 and S2 plus the S1
+      RPU follow-up, exported from analysis/experiment/output/ by
+      analysis/experiment/export_results_seed.py. One row per scenario and metric.
+    config:
+      column_types:
+        scenario: string
+        metric: string
+        estimate: float64
+        ci_low: float64
+        ci_high: float64
+        p_value: float64
+        verdict: string
+        data_label: string
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [scenario, metric]
+      - expression_is_true:
+          arguments:
+            expression: "ci_low is null or (ci_low <= estimate and estimate <= ci_high)"
+      - expression_is_true:
+          arguments:
+            expression: "data_label = 'SYNTHETIC/SIMULATED'"
+    columns:
+      - name: scenario
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['s0', 's1', 's2']
+      - name: metric
+        data_tests:
+          - not_null
+      - name: verdict
+        data_tests:
+          - not_null
+      - name: data_label
+        data_tests:
+          - not_null
