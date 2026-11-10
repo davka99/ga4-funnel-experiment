@@ -1,3 +1,7 @@
 # Pinned to the latest stable releases on PyPI as of 2026-11-10.
 dbt-core==1.12.6
 dbt-bigquery==1.12.2
+
+# Power analysis (analysis/power/)
+numpy==2.5.4
+scipy==1.18.1
