@@ -13,3 +13,6 @@ __pycache__/
 target/
 dbt_packages/
 logs/
+
+# Test cache
+.pytest_cache/

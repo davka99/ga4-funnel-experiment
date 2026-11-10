@@ -43,6 +43,7 @@ httpcore==1.0.9
 httpx==0.28.1
 idna==3.20
 importlib_metadata==10.2.0
+iniconfig==2.3.1
 isodate==0.7.2
 Jinja2==3.1.6
 jsonschema==4.26.0
@@ -67,6 +68,7 @@ pandas-gbq==0.35.3
 parsedatetime==2.6
 pathspec==1.0.4
 platformdirs==4.14.5
+pluggy==1.7.0
 proto-plus==1.29.0
 protobuf==6.33.6
 psutil==7.2.2
@@ -77,6 +79,8 @@ pycparser==3.12
 pydantic==2.14.3
 pydantic_core==2.50.4
 pydata-google-auth==1.9.1
+Pygments==2.21.0
+pytest==9.2.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.4
 python-slugify==9.1.3
