@@ -10,9 +10,9 @@ Where do buyers drop out of the purchase funnel, and how would we test a simplif
 
 ## Key findings
 
-1. **Much of the apparent checkout drop-off is carts built in earlier sessions.** 5,156 of 11,106 sessions with a `begin_checkout` have no `add_to_cart` in the same session. A session-level funnel therefore overstates drop-off, so the primary KPI is measured per user.
-2. **Baseline: 43.83% of users who begin checkout purchase within 7 days** (95% CI 42.82–44.84%, n = 9,232). The weekly rate rises with the season, from 29% to 58% (2020-W45 to 2021-W03), and the mix of new and returning users does not explain the rise.
-3. **Simulated experiment (S1): conversion +4.54 pp** (CUPED, 95% CI +2.06 to +7.03). The pre-registered decision is **NO LAUNCH YET**, because the AOV guardrail is inconclusive.
+1. **Much of the apparent checkout drop-off is most likely carts built in earlier sessions.** 5,156 of 11,106 sessions with a `begin_checkout` have no `add_to_cart` in the same session. A session-level funnel therefore overstates drop-off, so the primary KPI is measured per user.
+2. **Baseline: 43.83% of users who begin checkout purchase within 7 days** (95% CI 42.82–44.84%, n = 9,232). The weekly rate rises over the period, from 29% to 58% (2020-W45 to 2021-W03). The cause is not established (season, traffic mix or obfuscation); the mix of new and returning users does not explain it.
+3. **Simulated experiment (S1): conversion +4.54 pp** (CUPED, 95% CI +2.06 to +7.03; true simulated effect: +4.0 pp). The pre-registered decision is **NO LAUNCH YET**, because the AOV guardrail is inconclusive.
 4. **The AOV guardrail was underpowered.** With about 1,600 orders per arm, its CI is roughly ±8%, so it cannot show non-inferiority against −5% even when the true AOV effect is zero. It would need about 5× the sample: roughly 30 weeks at test-period traffic, about 40 weeks at the 12-week average.
 5. **The SRM check has low power at this scale.** Dropping 3.35% of treatment users (S2) still passed (p = 0.23). At about 2,980 users per arm and p < 0.001, only losses of about 8–9% or more are detected.
 
@@ -49,9 +49,29 @@ Every KPI is defined in `docs/metrics.md` and every modelling choice is logged i
 
 **Prerequisites:** Python 3.12, [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) and a GCP project with BigQuery (the free BigQuery Sandbox is enough).
 
+Create and activate a virtual environment:
+
 ```bash
+# Windows (cmd)
 py -3.12 -m venv .venv
 .venv\Scripts\activate
+```
+
+```powershell
+# Windows (PowerShell)
+py -3.12 -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+```bash
+# macOS / Linux
+python3.12 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the pinned dependencies and authenticate:
+
+```bash
 pip install -r requirements-lock.txt
 gcloud auth application-default login
 gcloud auth application-default set-quota-project <your-gcp-project-id>
@@ -82,7 +102,13 @@ dbt debug
 dbt build
 ```
 
-Run the analysis scripts from the repository root, in this order. They read from `a4-funnel-experiment.funnel_dev`. To use your own project, change `PROJECT` in `analysis/experiment/analyze_experiment.py`.
+Run the analysis scripts from the repository root, in this order. They read the `funnel_dev` dataset in the project given by the environment variable `GCP_PROJECT` (default: `a4-funnel-experiment`):
+
+```bash
+export GCP_PROJECT=<your-gcp-project-id>        # macOS / Linux
+$env:GCP_PROJECT = "<your-gcp-project-id>"      # Windows PowerShell
+set GCP_PROJECT=<your-gcp-project-id>           # Windows cmd
+```
 
 ```bash
 python analysis/power/power_mde.py
@@ -93,6 +119,14 @@ python analysis/experiment/rpu_followup.py --scenario s1
 ```
 
 Sandbox tables expire after 60 days. Everything is rebuildable with `dbt build`.
+
+Unit tests for the statistics (no BigQuery access needed):
+
+```bash
+pytest python_tests
+```
+
+CI (`.github/workflows/ci.yml`) runs these tests and `dbt parse` against a dummy profile on every push and pull request.
 
 ## Repository structure
 
@@ -107,6 +141,8 @@ analysis/
   exploration/      01–08: event counts, checks, funnel, baseline, trend, transactions
   power/            power_mde.py
   experiment/       analyze_experiment.py, rpu_followup.py, output/synthetic_*.json
+python_tests/       pytest unit tests for the experiment statistics
+.github/workflows/  CI: unit tests and dbt parse
 docs/
   metrics.md        KPI definitions
   decisions.md      decision log
@@ -124,3 +160,7 @@ docs/
 ## Data source
 
 Google's public BigQuery dataset [`bigquery-public-data.ga4_obfuscated_sample_ecommerce`](https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset): an obfuscated GA4 export from the Google Merchandise Store, about 2020-11-01 to 2021-01-31. Some values are redacted or obfuscated.
+
+## License
+
+The code in this repository is released under the MIT License (see `LICENSE`). The data is not part of this repository and is not covered by that license. The dataset is provided by Google and is subject to Google's terms for the dataset.
