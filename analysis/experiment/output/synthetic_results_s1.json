@@ -1,0 +1,38 @@
+{
+  "label": "SYNTHETIC/SIMULATED",
+  "srm": {
+    "n_control": 2977,
+    "n_treatment": 2985,
+    "chi2": 0.010734652801073465,
+    "p_value": 0.9174803041828011,
+    "passed": true
+  },
+  "primary_raw": {
+    "p_control": 0.4618743701713134,
+    "p_treatment": 0.5082077051926298,
+    "diff": 0.046333335021316424,
+    "rel_lift": 0.10031588244251563,
+    "ci_low": 0.020962528275175623,
+    "ci_high": 0.07161977765761127,
+    "z": 3.5791739033186545,
+    "p_value": 0.0003446820533079542
+  },
+  "primary_cuped": {
+    "theta": 0.08026225910680669,
+    "rho2": 0.040882798351099016,
+    "diff": 0.04544943672559287,
+    "ci_low": 0.02062418532635543,
+    "ci_high": 0.07027468812483031,
+    "p_value": 0.00033290238808847405,
+    "variance_reduction": 0.0409057151418577
+  },
+  "decision_estimate": "cuped",
+  "aov_guardrail": {
+    "aov_control": 71.39662994167207,
+    "aov_treatment": 68.86979785969085,
+    "rel_diff": -0.03539147553666799,
+    "ci_low": -0.11084062882835508,
+    "ci_high": 0.04663877957607234
+  },
+  "decision": "NO LAUNCH YET: primary positive, AOV inconclusive"
+}
