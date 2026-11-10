@@ -31,9 +31,11 @@ docs/
 ```bash
 py -3.12 -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements-lock.txt
 gcloud auth application-default login
 ```
+
+`requirements-lock.txt` pins every package, including transitive dependencies, so installs are reproducible. `requirements.txt` holds only the direct dependencies. After changing it, reinstall and regenerate the lock file with `pip freeze > requirements-lock.txt`.
 
 Create the `ga4_funnel_experiment` profile in `~/.dbt/profiles.yml`. Use `method: oauth` and point it at your own GCP project. Do not put the profile in the repo.
 
