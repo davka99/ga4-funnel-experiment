@@ -26,7 +26,9 @@ Every KPI states its numerator, denominator, grain, population and time window.
 | mobile | 3,686 | 1,643 | 44.57% | 42.98%–46.18% |
 | tablet | 200 | 83 | 41.50% | 34.89%–48.43% |
 
-By ISO week (UTC) the rate rises from 29.12% in 2020-W45 to 58.35% in 2021-W03. 2020-W44 contains only 2020-11-01 (91 users, 16.48%). The cause of this trend has not been investigated.
+By ISO week (UTC) the rate rises from 29.12% in 2020-W45 to 58.35% in 2021-W03. 2020-W44 contains only 2020-11-01 (91 users, 16.48%).
+
+The mix of new and returning users does not explain the trend (`06_baseline_trend_diagnostic.sql`, user × ISO-week anchors). Among new users (no `begin_checkout` in an earlier week) the rate rises the same way, from 29.12% in 2020-W45 to 58.35% in 2021-W03. Returning users convert higher (65–83%), but they are only 0.4%–12.3% of each week's users, which lifts the weekly rate by at most about 3 percentage points. The cause of the remaining trend has not been investigated.
 
 ## Session funnel step conversion
 
