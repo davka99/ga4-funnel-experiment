@@ -1,12 +1,16 @@
-# ga4-funnel-experiment
+# Where Checkout Buyers Drop Out – and How to Test a Fix
 
 A funnel analysis and pre-registered checkout experiment built on real GA4 e-commerce events with BigQuery, dbt and Python.
 
+**In plain words:** an online shop wants to know where buyers give up on the way to paying, and whether a simpler checkout would help. Looking at single visits makes the checkout look worse than it is, because many people fill their cart on one visit and pay on another; per customer, 44 % of those who start checkout buy within a week. A simulated A/B test of a shorter checkout raised purchases by about 4.5 percentage points, but the recommendation is still **not to launch fully yet**: the test was too small to rule out that order values fall. Built with BigQuery, dbt, Python and Looker Studio.
+
 > **SYNTHETIC/SIMULATED — experiment part.** The user behaviour comes from real (obfuscated) GA4 events. The dataset contains **no A/B test**. The experiment's assignment and treatment effect are simulated. They live only in `synthetic_` tables (`synthetic_exp__assignment`, `synthetic_exp__s1`, `synthetic_exp__s2`, `synthetic_rpt_experiment_variants`, and the seed `synthetic_experiment_results`) and `synthetic_` files (`analysis/experiment/output/synthetic_*.json`, `seeds/synthetic_experiment_results.csv`). The experiment results demonstrate the method. They are not evidence that a simplified checkout works.
 
-**Dashboard:** [Looker Studio](https://datastudio.google.com/reporting/61956f78-2141-4efc-ae68-0c0de37d5367)
+**Dashboard:** [Looker Studio](https://datastudio.google.com/reporting/61956f78-2141-4efc-ae68-0c0de37d5367) (reads live from a BigQuery Sandbox, whose tables expire 60 days after each `dbt build`; if the live dashboard is empty, the screenshot below shows it as built on 2026-11-10).
 
 ![Dashboard](docs/img/dashboard.png)
+
+*How to read it: top left, the steps of the purchase funnel; the orange bars count every visit where a step happened, the blue bars only visits where the steps came in order. Bottom left, the weekly share of checkout starters who buy within 7 days, with its 95 % interval. Right, the simulated experiment: purchase rate per group and the result table with the launch decision.*
 
 ## Business question
 
@@ -49,6 +53,14 @@ Every KPI is defined in `docs/metrics.md` and every modelling choice is logged i
 | Revenue per enrolled user (follow-up, plan §8) | $37.01 → $38.81: +4.9% (95% CI −5.2% to +16.1%) | ⚠️ Inconclusive |
 
 **Decision: NO LAUNCH YET.** See `docs/launch_memo.md` for the options and the recommendation.
+
+## Recommendation
+
+The pre-registered rule says **no launch yet**: conversion clearly improved, but the order-value guardrail can neither confirm nor rule out harm. As a business judgment on top of the rule, the [launch memo](docs/launch_memo.md) recommends:
+
+1. **Launch to 90 % of users and keep a 10 % holdout**, so the conversion gain is captured while revenue impact is still measured.
+2. **Pre-register a revenue-per-user margin** before the 90 % rollout, and judge the holdout against it.
+3. **Power every guardrail, not only the primary metric,** in the next test: this one would have needed about five times the sample to say anything about order value.
 
 ## How to run
 
